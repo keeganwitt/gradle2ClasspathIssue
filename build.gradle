@@ -2,34 +2,22 @@ def cdhVer = "cdh5.0.2"
 def hadoopVer = "2.3.0-${cdhVer}"
 def hbaseVer = "0.96.1.1-${cdhVer}"
 
-subprojects {
-  apply plugin: "java"
-  repositories {
-    mavenCentral()
-    maven { url "https://repository.cloudera.com/artifactory/cloudera-repos" }
-  }
-  dependencies {
-    testCompile "junit:junit:4.11"
-  }
+apply plugin: "java"
+
+repositories {
+  mavenCentral()
+  maven { url "https://repository.cloudera.com/artifactory/cloudera-repos" }
 }
 
-project(":parent") {
-  dependencies {
-    compile("org.apache.hbase:hbase-client:$hbaseVer") {
-      exclude(group: "org.jruby", module: "jruby-complete")
-      exclude(group: "org.slf4j")
-      exclude(group: "asm", module: "asm")
-      exclude(group: "org.apache.thrift")
-    }
-    compile("org.apache.hadoop:hadoop-client:$hadoopVer") {
-      exclude(group: "junit", module: "junit")
-    }
+dependencies {
+  compile("org.apache.hbase:hbase-client:$hbaseVer") {
+    exclude(group: "org.jruby", module: "jruby-complete")
+    exclude(group: "org.slf4j")
+    exclude(group: "asm", module: "asm")
+    exclude(group: "org.apache.thrift")
   }
-}
-
-project(":child") {
-  dependencies {
-    compile project(":parent")
-    testCompile project(":parent").sourceSets.test.output
+  compile("org.apache.hadoop:hadoop-client:$hadoopVer") {
+    exclude(group: "junit", module: "junit")
   }
+  testCompile "junit:junit:4.11"
 }
